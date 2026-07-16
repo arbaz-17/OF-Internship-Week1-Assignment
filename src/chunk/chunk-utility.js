@@ -26,7 +26,3 @@ export function chunk(values, size) {
   return result;
 }
 
-let values = 6;
-let size = 2;
-
-console.log("Chunks: ", chunk(values, size));
