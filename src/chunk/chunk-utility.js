@@ -1,4 +1,4 @@
-function chunk(values, size) {
+export function chunk(values, size) {
   if (typeof values !== "string" && !Array.isArray(values)) {
     throw new TypeError("Input must be a string or an array.");
   }
@@ -6,7 +6,7 @@ function chunk(values, size) {
   if (size < 1 || !Number.isInteger(size)) {
     throw new RangeError("Size must be an integer greater than 0");
   }
-  
+
   const result = [];
   let currentChunk = [];
 

@@ -1,4 +1,4 @@
-function groupBy(values, selector) {
+export function groupBy(values, selector) {
 
 
   if (!Array.isArray(values)) {

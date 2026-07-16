@@ -1,4 +1,4 @@
-function flatten(values, depth = 1) {
+export function flatten(values, depth = 1) {
   if (!Array.isArray(values)) {
     throw new TypeError("Values must be an array");
   }

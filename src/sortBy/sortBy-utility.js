@@ -1,4 +1,4 @@
-function sortBy(values, selector, direction = "asc") {
+export function sortBy(values, selector, direction = "asc") {
   if (!Array.isArray(values)) {
     throw new TypeError("Values must be an array");
   }

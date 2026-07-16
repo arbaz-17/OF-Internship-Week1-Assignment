@@ -30,7 +30,7 @@ function deepEqual(valueA, valueB) {
     });
 }
 
-function unique(values) {
+export function unique(values) {
     const result = [];
 
     for (const item of values) {
