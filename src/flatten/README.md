@@ -190,12 +190,3 @@ The project must support ES modules because `flatten` is exported using the `exp
 }
 ```
 
-## Complexity
-
-Let `v` be the number of values and arrays visited at the requested depth.
-
-- **Time complexity:** `O(v)`
-- **Output space complexity:** `O(r)`, where `r` is the number of values in the returned array
-- **Recursion stack:** `O(h)`, where `h` is the deepest nested level visited
-
-Using `Infinity` visits the complete nested array structure.
