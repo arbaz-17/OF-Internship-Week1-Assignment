@@ -5,6 +5,17 @@ let nullTest = [null, undefined, null, undefined, null]
 let numStrTest = [1, "1", 2, "2", 1]
 let boolStrTest = [true, "true", false, "false", true]
 let mixTest = [1, "1", true, 1, true, null, null]
+let user = { id:1 }
+let repeatObjTest = [user, user]
+let plainObj = [{id:1}, {id:1}]
+
+const objA = { name: "Ali" };
+const objB = { name: "Zain" };
+const testRef2 = [objA, objB, objA];
+
+const sharedObj = { role: "admin" };
+const testRef3 = [1, sharedObj, "hello", sharedObj, 1];
+
 
 
 function unique(values){
@@ -26,5 +37,7 @@ function unique(values){
 //console.log("Unique Null/Undefined: ",unique(nullTest))
 //console.log(`Unique NumStr: ${unique(numStrTest)}`)
 //console.log(`Unique BoolStr: ${unique(boolStrTest)}`)
-console.log("Unique MixTest: ",unique(mixTest))
-
+//console.log("Unique Mix: ",unique(mixTest))
+//console.log("Unique Obj: ",unique(repeatObjTest))
+//console.log("Unique Objects: ",unique(testRef2))
+console.log("Unique Objects: ",unique(testRef3))
