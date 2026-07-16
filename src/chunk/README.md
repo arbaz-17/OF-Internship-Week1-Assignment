@@ -1,4 +1,4 @@
-# `chunk`
+# `Chunk Utility Function`
 
 Split a string or an array into smaller arrays of a specified maximum size.
 
@@ -159,12 +159,3 @@ The project must be configured to support ES modules because `chunk` is exported
   "type": "module"
 }
 ```
-
-## Complexity
-
-For an input containing `n` items:
-
-- **Time complexity:** `O(n)`
-- **Space complexity:** `O(n)`
-
-Every input item is visited once and included once in the returned result.
