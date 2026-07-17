@@ -1,25 +1,16 @@
- function isPlainObject(value) {
-  if (value === null || typeof value !== "object") {
-    return false;
-  }
-
-  const prototype = Object.getPrototypeOf(value);
-
+function isPlainObject(value) {
   return (
-    prototype === Object.prototype ||
-    prototype === null
+    typeof value === "object" &&
+    value !== null &&
+    !Array.isArray(value)
   );
 }
 
 export function deepClone(value) {
-
-  if (value === null || typeof value !== "object") {
-    if (typeof value === "function") {
-      throw new TypeError(
-        "Functions are not supported by deepClone"
-      );
-    }
-
+  if (
+    value === null ||
+    typeof value !== "object"
+  ) {
     return value;
   }
 
@@ -27,17 +18,17 @@ export function deepClone(value) {
     return value.map((item) => deepClone(item));
   }
 
-  if (!isPlainObject(value)) {
-    throw new TypeError(
-      "deepClone supports only primitives, arrays, and plain objects"
-    );
+  if (isPlainObject(value)) {
+    const clone = {};
+
+    for (const key of Object.keys(value)) {
+      clone[key] = deepClone(value[key]);
+    }
+
+    return clone;
   }
 
-  const result = {};
-
-  for (const key of Object.keys(value)) {
-    result[key] = deepClone(value[key]);
-  }
-
-  return result;
+  throw new TypeError(
+    "deepClone only supports primitives, arrays, and plain objects"
+  );
 }

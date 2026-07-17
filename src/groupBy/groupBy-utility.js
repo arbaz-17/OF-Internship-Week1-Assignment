@@ -36,22 +36,3 @@ if (!(typeof selector === "function" || typeof selector === "string")) {
   return result;
 }
 
-
-// Property-name example
-const users = [
-  { name: "Ali", role: "developer" },
-  { name: "Sara", role: "designer" },
-  { name: "Ahmed", role: "developer" },
-  { name: "Ayesha" },
-];
-
-console.log(groupBy(users, "role"));
-
-// Callback example
-const numbers = [1, 2, 3, 4, 5, 6];
-
-console.log(
-  groupBy(numbers, (number) =>
-    number % 2 === 0 ? "even" : "odd"
-  )
-);
