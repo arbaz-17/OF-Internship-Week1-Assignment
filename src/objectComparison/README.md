@@ -2,7 +2,6 @@
 
 Compare two objects by their enumerable own properties and values.
 
-> **Naming note:** The exported function is named `objectComparision` in the current implementation. The conventional spelling is `objectComparison`.
 
 ## Purpose
 
