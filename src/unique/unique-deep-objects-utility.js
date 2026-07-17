@@ -24,16 +24,7 @@ function areValuesEqual(valueA, valueB) {
   return false;
 }
 
-export function objectComparision(objectA, objectB) {
-  if (
-    !isPlainObject(objectA) ||
-    !isPlainObject(objectB)
-  ) {
-    throw new TypeError(
-      "Both values must be plain objects"
-    );
-  }
-
+function areObjectsEqual(objectA, objectB) {
   const keysA = Object.keys(objectA);
   const keysB = Object.keys(objectB);
 
@@ -55,4 +46,35 @@ export function objectComparision(objectA, objectB) {
   }
 
   return true;
+}
+
+export function uniqueDeepObjects(values) {
+  if (!Array.isArray(values)) {
+    throw new TypeError("Values must be an array");
+  }
+
+  const result = [];
+
+  for (const item of values) {
+    if (!isPlainObject(item)) {
+      throw new TypeError(
+        "Values must contain only plain objects"
+      );
+    }
+
+    let alreadyExists = false;
+
+    for (const existingItem of result) {
+      if (areObjectsEqual(item, existingItem)) {
+        alreadyExists = true;
+        break;
+      }
+    }
+
+    if (!alreadyExists) {
+      result.push(item);
+    }
+  }
+
+  return result;
 }

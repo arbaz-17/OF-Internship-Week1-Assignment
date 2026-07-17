@@ -350,9 +350,7 @@ Output:
 ]
 ```
 
-String comparison is case-sensitive and follows JavaScript's standard relational comparison rules. It is not locale-aware.
-
-For locale-aware string ordering, this implementation would need support for a custom comparison function, such as one using `localeCompare`.
+String comparison is case-sensitive and follows JavaScript's standard relational comparison rules.
 
 ## Stable Ordering
 
