@@ -18,7 +18,7 @@ function areValuesEqual(valueA, valueB) {
     isPlainObject(valueA) &&
     isPlainObject(valueB)
   ) {
-    return areObjectsEqual(valueA, valueB);
+    return objectComparision(valueA, valueB);
   }
 
   return false;
