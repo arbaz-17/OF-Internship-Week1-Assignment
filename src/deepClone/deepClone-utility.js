@@ -1,10 +1,4 @@
-function isPlainObject(value) {
-  return (
-    typeof value === "object" &&
-    value !== null &&
-    !Array.isArray(value)
-  );
-}
+import isPlainObject from "../helper";
 
 export function deepClone(value) {
   if (
@@ -32,3 +26,5 @@ export function deepClone(value) {
     "deepClone only supports primitives, arrays, and plain objects"
   );
 }
+
+

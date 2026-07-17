@@ -1,10 +1,4 @@
-function isPlainObject(value) {
-  return (
-    typeof value === "object" &&
-    value !== null &&
-    !Array.isArray(value)
-  );
-}
+import isPlainObject from "../helper";
 
 export function transformObject(object, transformer) {
   if (!isPlainObject(object)) {
