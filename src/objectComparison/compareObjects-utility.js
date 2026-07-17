@@ -1,4 +1,4 @@
-import isPlainObject from "../helper";
+import isPlainObject from "../helper.js";
 
 function areValuesEqual(valueA, valueB) {
   if (

@@ -1,4 +1,4 @@
-import isPlainObject from "../helper";
+import isPlainObject from "../helper.js";
 
 export function deepClone(value) {
   if (
