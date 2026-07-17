@@ -50,7 +50,7 @@ Build a JavaScript utility library containing the following functions:
 ### 1. Clone the repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/arbaz-17/OF-Internship-Week1-Assignment.git
 cd JS-UTILITY-LIBRARY
 ```
 
