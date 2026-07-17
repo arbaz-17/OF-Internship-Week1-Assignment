@@ -1,5 +1,7 @@
 import { chunk } from "./chunk/chunk-utility.js";
-import { unique } from "./unique/unique-utility.js";
+import { unique } from "./unique/unique-primitives-utility.js";
+import { uniqueObjects } from "./unique/unique-shallow-objects-utility.js";
+import { uniqueDeepObjects } from "./unique/unique-deep-objects-utility.js";
 import { sortBy } from "./sortBy/sortBy-utility.js";
 import { transformObject } from "./objectTransformation/transformObject-utility.js";
 import { compareObjects } from "./objectComparison/compareObjects-utility.js";
