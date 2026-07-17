@@ -37,7 +37,3 @@ export function flatten(values, depth = 1) {
 
   return result;
 }
-
-
-const basicArray = [1, [2, 3], [[4, 5]]];
-console.log("Default Depth (1):", flatten(basicArray, 3));

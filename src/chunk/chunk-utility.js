@@ -26,3 +26,8 @@ export function chunk(values, size) {
   return result;
 }
 
+
+const myData = [1, 2, 3, 4, 5];
+const chunkedData = chunk(myData, 2);
+
+console.log(chunkedData);
