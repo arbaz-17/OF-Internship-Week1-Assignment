@@ -1,19 +1,16 @@
-# `Deep Clone Utility Function`
+# Deep Clone Utility
 
-Create a recursive copy of primitives, arrays, and object properties.
+## Name
+
+`deepClone`
 
 ## Purpose
 
-The `deepClone` function creates a new value by recursively copying nested arrays and objects.
+The `deepClone` utility creates an independent copy of a supported JavaScript value.
 
-The function:
+It recursively clones nested arrays and plain objects so that changes made to the cloned structure do not affect the original structure.
 
-- returns primitive values unchanged;
-- creates new arrays;
-- creates new objects;
-- recursively clones nested array elements and object properties;
-- preserves the order of array elements;
-- does not modify the original value.
+Primitive values are returned directly because they are copied by value and do not contain nested references.
 
 ## Function Signature
 
@@ -21,325 +18,129 @@ The function:
 deepClone(value)
 ```
 
-## Input
+## Parameters
 
 ### `value`
 
 The value to clone.
 
-The implementation directly supports:
+Supported values include:
 
 - primitive values;
 - arrays;
-- non-null objects that are not arrays.
-
-Examples:
-
-```js
-deepClone(10);
-deepClone("hello");
-deepClone([1, 2, 3]);
-deepClone({ name: "Ali" });
-```
+- plain objects;
+- nested combinations of arrays and plain objects.
 
 ## Output
 
-Returns a cloned version of the supplied value.
+Returns a cloned version of the provided value.
 
-The exact behavior depends on the input type.
-
-### Primitive values
-
-Primitive values are returned directly.
+### Clone a plain object
 
 ```js
-deepClone(42);
-// 42
+const user = {
+  name: "Ali",
+  address: {
+    city: "Lahore"
+  }
+};
 
+const clonedUser = deepClone(user);
+
+clonedUser.address.city = "Karachi";
+
+console.log(user.address.city);
+// "Lahore"
+```
+
+The nested `address` object is cloned, so changing the clone does not affect the original object.
+
+### Clone an array
+
+```js
+const values = [
+  1,
+  [2, 3],
+  { active: true }
+];
+
+const clonedValues = deepClone(values);
+
+console.log(clonedValues);
+// [1, [2, 3], { active: true }]
+```
+
+The outer array, nested array, and nested plain object are all newly created values.
+
+### Clone a primitive
+
+```js
 deepClone("hello");
 // "hello"
 
-deepClone(true);
-// true
+deepClone(42);
+// 42
 
 deepClone(null);
 // null
 ```
 
-Primitive values do not require a separate copy because they are immutable values rather than mutable object references.
+Primitive values are returned unchanged because they do not need recursive cloning.
 
-### Arrays
+## Example File
 
-A new array is created, and every item is cloned recursively.
+A runnable example is available at:
 
-```js
-const original = [
-  1,
-  [2, 3],
-  { name: "Ali" }
-];
-
-const clone = deepClone(original);
+```text
+examples/deepClone.js
 ```
 
-Result:
+## Error Handling
+
+The function throws a `TypeError` when it receives an unsupported object type.
 
 ```js
-[
-  1,
-  [2, 3],
-  { name: "Ali" }
-]
+deepClone(new Date());
+
+// TypeError:
+// deepClone only supports primitives, arrays, and plain objects
 ```
-
-The outer array, nested array, and nested object are all new references.
-
-### Objects
-
-A new object is created, and every enumerable own string-keyed property is cloned recursively.
-
-```js
-const original = {
-  user: {
-    name: "Sara",
-    preferences: {
-      theme: "dark"
-    }
-  }
-};
-
-const clone = deepClone(original);
-```
-
-Result:
-
-```js
-{
-  user: {
-    name: "Sara",
-    preferences: {
-      theme: "dark"
-    }
-  }
-}
-```
-
-## Reference Independence
-
-Changes made to the clone do not affect the corresponding nested arrays or objects in the original value.
-
-```js
-const original = {
-  user: {
-    name: "Ali"
-  },
-  tags: ["admin", "editor"]
-};
-
-const clone = deepClone(original);
-
-clone.user.name = "Sara";
-clone.tags.push("author");
-
-console.log(original);
-```
-
-Output:
-
-```js
-{
-  user: {
-    name: "Ali"
-  },
-  tags: ["admin", "editor"]
-}
-```
-
-The original remains unchanged because the nested object and array were recursively copied.
 
 ## Algorithm
 
-The function uses recursion and works as follows:
-
-1. Check whether the value is `null` or is not an object.
-2. Return such values directly.
-3. When the value is an array:
-   - create a new array with `map`;
-   - recursively clone every array item.
-4. When the value is a non-null object that is not an array:
-   - create an empty object;
-   - obtain its enumerable own string keys with `Object.keys`;
-   - recursively clone each corresponding property value;
+1. Check whether the value is `null` or not an object.
+2. If it is a primitive value, return it directly.
+3. If the value is an array:
+   - create a new array;
+   - recursively clone every item;
+   - return the cloned array.
+4. If the value is a plain object:
+   - create a new object;
+   - iterate through its own enumerable string keys;
+   - recursively clone every property value;
    - assign each cloned value to the new object.
-5. Return the completed clone.
+5. If the value is another object type, throw a `TypeError`.
 
-## Helper Function
+## Implementation Notes
 
-The implementation includes an `isPlainObject` helper:
+The utility uses recursion to process nested structures.
 
-```js
-function isPlainObject(value) {
-  return (
-    typeof value === "object" &&
-    value !== null &&
-    !Array.isArray(value)
-  );
-}
-```
+Arrays are cloned with `map()`, while plain objects are cloned by iterating through `Object.keys()`.
 
-Despite its name, this check does not verify that an object is a true plain object.
+The `isPlainObject` helper is used to distinguish ordinary object literals from special object types such as `Date`, `Map`, `Set`, and class instances.
 
-It returns `true` for any non-null, non-array object, including values such as:
-
-```js
-new Date()
-new Map()
-new Set()
-/pattern/
-```
-
-This affects the limitations described below.
-
-## Validation and Errors
-
-The function contains the following error:
-
-```js
-throw new TypeError(
-  "deepClone only supports primitives, arrays, and plain objects"
-);
-```
-
-With the current `isPlainObject` implementation, this error is normally unreachable.
-
-Every JavaScript value falls into one of these paths:
-
-- `null` or a non-object value is returned directly;
-- an array is cloned with `map`;
-- every other object passes `isPlainObject`.
-
-As a result, unsupported object types are generally converted into ordinary objects rather than causing the documented `TypeError`.
 
 ## Limitations
 
-### Special object types are not preserved
+- Only primitives, arrays, and plain objects are supported.
+- Special object types such as `Date`, `Map`, `Set`, `RegExp`, and class instances are not cloned.
 
-Objects such as `Date`, `Map`, `Set`, and `RegExp` are not cloned according to their original types.
+## Complexity
 
-```js
-const original = {
-  createdAt: new Date("2025-01-01")
-};
+Let `n` be the total number of visited array items and object properties, and let `d` be the maximum nesting depth.
 
-const clone = deepClone(original);
-```
+- Time complexity: `O(n)`
+- Cloned result space: `O(n)`
+- Call-stack space: `O(d)`
 
-The `Date` object has no enumerable own string properties, so the cloned value becomes:
-
-```js
-{
-  createdAt: {}
-}
-```
-
-Similar behavior applies to many built-in object types.
-
-
-## Examples
-
-### Nested object and array
-
-```js
-const original = {
-  id: 1,
-  profile: {
-    name: "Sara",
-    skills: ["JavaScript", "Node.js"]
-  }
-};
-
-const clone = deepClone(original);
-
-console.log(clone);
-```
-
-Output:
-
-```js
-{
-  id: 1,
-  profile: {
-    name: "Sara",
-    skills: ["JavaScript", "Node.js"]
-  }
-}
-```
-
-Reference checks:
-
-```js
-clone !== original;
-// true
-
-clone.profile !== original.profile;
-// true
-
-clone.profile.skills !== original.profile.skills;
-// true
-```
-
-### Empty values
-
-```js
-deepClone([]);
-// []
-
-deepClone({});
-// {}
-```
-
-### Mixed values
-
-```js
-deepClone({
-  number: 10,
-  text: "hello",
-  active: true,
-  missing: undefined,
-  nested: [null, { value: 5 }]
-});
-```
-
-Output:
-
-```js
-{
-  number: 10,
-  text: "hello",
-  active: true,
-  missing: undefined,
-  nested: [null, { value: 5 }]
-}
-```
-
-## Running the Examples
-
-Example cases are available in:
-
-```text
-/examples/deepClone.js
-```
-
-Run the example file from the project root:
-
-```bash
-node examples/deepClone.js
-```
-
-The project must support ES modules because `deepClone` is exported using the `export` keyword. One common setup is to include the following field in `package.json`:
-
-```json
-{
-  "type": "module"
-}
-```
+Each supported value is visited once and copied into the cloned structure.
