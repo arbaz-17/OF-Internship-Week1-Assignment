@@ -1,5 +1,19 @@
 import isPlainObject from "../helper.js";
 
+function areArraysEqual(arrayA, arrayB) {
+  if (arrayA.length !== arrayB.length) {
+    return false;
+  }
+
+  for (let index = 0; index < arrayA.length; index++) {
+    if (!areValuesEqual(arrayA[index], arrayB[index])) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
 function areValuesEqual(valueA, valueB) {
   if (
     valueA === valueB ||
@@ -8,17 +22,21 @@ function areValuesEqual(valueA, valueB) {
     return true;
   }
 
+  if (Array.isArray(valueA) && Array.isArray(valueB)) {
+    return areArraysEqual(valueA, valueB);
+  }
+
   if (
     isPlainObject(valueA) &&
     isPlainObject(valueB)
   ) {
-    return objectComparision(valueA, valueB);
+    return objectComparison(valueA, valueB);
   }
 
   return false;
 }
 
-export function objectComparision(objectA, objectB) {
+export function objectComparison(objectA, objectB) {
   if (
     !isPlainObject(objectA) ||
     !isPlainObject(objectB)
