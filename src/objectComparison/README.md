@@ -1,329 +1,167 @@
-# `Object Comparison Utility Function`
+# Object Comparison Utility
 
-Compare two objects by their enumerable own properties and values.
+## Name
 
+`objectComparison`
 
 ## Purpose
 
-The `objectComparision` function checks whether two objects contain:
+The `objectComparison` utility checks whether two plain objects are deeply equal.
 
-- the same number of enumerable own string-keyed properties;
-- the same property names;
-- equal values for each property.
+It compares:
 
-The function also treats two `NaN` values as equal.
+- own enumerable string properties;
+- primitive values;
+- nested plain objects;
+- nested arrays;
+- objects stored inside arrays;
+- arrays stored inside objects.
+
 
 ## Function Signature
 
 ```js
-objectComparision(objectA, objectB)
+objectComparison(objectA, objectB)
 ```
 
-## Input
+## Parameters
 
 ### `objectA`
 
-The first object to compare.
+The first plain object to compare.
 
 ### `objectB`
 
-The second object to compare.
+The second plain object to compare.
 
-Both inputs must pass the utility's `isPlainObject` check:
+Both top-level values must be plain objects. Passing arrays, `null`, special object types, or primitive values throws a `TypeError`.
 
-```js
-typeof value === "object" &&
-value !== null &&
-!Array.isArray(value)
-```
-
-Example:
-
-```js
-objectComparision(
-  { name: "Ali", age: 25 },
-  { name: "Ali", age: 25 }
-);
-```
 
 ## Output
 
 Returns a boolean:
 
-- `true` when both objects have matching enumerable own keys and equal values;
-- `false` when their keys or values differ.
-
-A `TypeError` is thrown when either top-level input does not pass the object validation.
-
-## Examples
+- `true` when both objects have the same keys and deeply equal values;
+- `false` when their keys, values, array contents, or nested structures differ.
 
 ### Equal objects
 
 ```js
-objectComparision(
-  { name: "Ali", age: 25 },
-  { name: "Ali", age: 25 }
+objectComparison(
+  {
+    name: "Ali",
+    age: 25
+  },
+  {
+    age: 25,
+    name: "Ali"
+  }
 );
+
+// true
 ```
 
-Output:
+Property order does not matter.
+
+### Nested objects and arrays
 
 ```js
-true
-```
-
-### Property order does not matter
-
-```js
-objectComparision(
-  { name: "Ali", age: 25 },
-  { age: 25, name: "Ali" }
+objectComparison(
+  {
+    user: {
+      name: "Ali",
+      skills: ["JavaScript", "CSS"]
+    }
+  },
+  {
+    user: {
+      name: "Ali",
+      skills: ["JavaScript", "CSS"]
+    }
+  }
 );
+
+// true
 ```
-
-Output:
-
-```js
-true
-```
-
-The function checks property names rather than relying on insertion order.
 
 ### Different values
 
 ```js
-objectComparision(
-  { name: "Ali", age: 25 },
-  { name: "Ali", age: 30 }
+objectComparison(
+  {
+    name: "Ali",
+    active: true
+  },
+  {
+    name: "Ali",
+    active: false
+  }
 );
-```
 
-Output:
-
-```js
-false
-```
-
-### Different property names
-
-```js
-objectComparision(
-  { name: "Ali" },
-  { username: "Ali" }
-);
-```
-
-Output:
-
-```js
-false
-```
-
-### Different property counts
-
-```js
-objectComparision(
-  { name: "Ali" },
-  { name: "Ali", age: 25 }
-);
-```
-
-Output:
-
-```js
-false
-```
-
-### `NaN` values
-
-JavaScript normally considers `NaN !== NaN`. This utility handles that case explicitly.
-
-```js
-objectComparision(
-  { score: NaN },
-  { score: NaN }
-);
-```
-
-Output:
-
-```js
-true
-```
-
-### Empty objects
-
-```js
-objectComparision({}, {});
-```
-
-Output:
-
-```js
-true
-```
-
-## Equality Behavior
-
-### Primitive values
-
-Primitive values are considered equal when strict equality succeeds:
-
-```js
-valueA === valueB
-```
-
-Examples:
-
-```js
-objectComparision(
-  { active: true, count: 2 },
-  { active: true, count: 2 }
-);
-// true
-```
-
-Different primitive types are not considered equal:
-
-```js
-objectComparision(
-  { count: 2 },
-  { count: "2" }
-);
 // false
 ```
 
-### `NaN`
-
-Two `NaN` values are treated as equal:
+### Array order
 
 ```js
-Number.isNaN(valueA) && Number.isNaN(valueB)
-```
-
-### Arrays
-
-Arrays are not compared by their contents.
-
-They are equal only when both properties refer to the exact same array instance.
-
-```js
-const shared = [1, 2, 3];
-
-objectComparision(
-  { values: shared },
-  { values: shared }
-);
-// true
-```
-
-Separate arrays with identical contents are not equal:
-
-```js
-objectComparision(
+objectComparison(
   { values: [1, 2, 3] },
-  { values: [1, 2, 3] }
+  { values: [3, 2, 1] }
 );
+
 // false
 ```
 
-### Functions
+## Example File
 
-Functions are equal only when they are the same function reference.
+A runnable example is available at:
 
-```js
-const handler = () => "done";
-
-objectComparision(
-  { handler },
-  { handler }
-);
-// true
-```
-
-### `null` and `undefined`
-
-Matching `null` or `undefined` property values are equal because strict equality succeeds.
-
-```js
-objectComparision(
-  { value: null, other: undefined },
-  { value: null, other: undefined }
-);
-// true
+```text
+examples/objectComparison.js
 ```
 
 ## Algorithm
 
-The top-level comparison works as follows:
+The utility uses three cooperating functions:
 
-1. Validate that both inputs pass `isPlainObject`.
-2. Read the enumerable own string keys of each object with `Object.keys`.
-3. Return `false` when the objects have different key counts.
-4. Iterate over every key from the first object.
-5. Confirm that the second object owns the same key with `Object.hasOwn`.
-6. Read the corresponding values from both objects.
-7. Compare the values using `areValuesEqual`.
-8. Return `false` as soon as a missing key or unequal value is found.
-9. Return `true` when every key and value matches.
+- `objectComparison` compares plain objects;
+- `areArraysEqual` compares arrays;
+- `areValuesEqual` decides how individual values should be compared.
 
-The value comparison helper:
+Steps:
 
-1. Returns `true` for strict equality.
-2. Returns `true` when both values are `NaN`.
-3. Attempts a recursive object comparison when both values pass `isPlainObject`.
-4. Returns `false` for all other unequal values.
+1. Validate that both top-level values are plain objects.
+2. Collect the own enumerable string keys of both objects.
+3. Return `false` if the objects have different numbers of keys.
+4. Iterate through every key in the first object.
+5. Check that the second object owns the same key.
+6. Compare the two property values:
+   - use strict equality for identical primitive values or references;
+   - treat two `NaN` values as equal;
+   - compare arrays recursively by length and position;
+   - compare nested plain objects recursively;
+   - otherwise return `false`.
+7. Return `true` after every key and value passes comparison.
 
-## Validations
+## Implementation Notes
 
-### Invalid first input
+The function uses `Object.hasOwn()` to confirm that a key belongs directly to the second object rather than being inherited.
 
-```js
-objectComparision(null, {});
-// TypeError: Both values must be plain objects
+Comparing key counts before checking individual keys prevents objects with missing or additional properties from being considered equal.
 
-objectComparision([], {});
-// TypeError: Both values must be plain objects
-```
-
-### Invalid second input
-
-```js
-objectComparision({}, "value");
-// TypeError: Both values must be plain objects
-
-objectComparision({}, undefined);
-// TypeError: Both values must be plain objects
-```
-
-### Primitive top-level values
-
-Primitive values are not valid top-level inputs.
-
-```js
-objectComparision(10, 10);
-// TypeError: Both values must be plain objects
-```
+Arrays are compared element by element. Nested arrays and plain objects can be combined to any practical depth.
 
 
-## Running the Examples
+## Limitations
 
-Example cases are expected in:
+- Both top-level inputs must be plain objects.
+- Non-enumerable properties are ignored.
+- Two plain objects with different allowed prototypes may be considered equal when their enumerable contents match.
+- Special object types such as `Date`, `Map`, `Set`, `RegExp`, and class instances are not compared structurally.
 
-```text
-/examples/objectComparision.js
-```
+## Complexity
 
-Run the example file from the project root:
+Let `n` be the total number of visited object properties and array elements, and let `d` be the maximum nesting depth.
 
-```bash
-node examples/objectComparision.js
-```
-
-The project must support ES modules because `objectComparision` is exported using the `export` keyword. One common setup is to include the following field in `package.json`:
-
-```json
-{
-  "type": "module"
-}
-```
+- Time complexity: `O(n)`
+- Call-stack space: `O(d)`
