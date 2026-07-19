@@ -1,6 +1,7 @@
-import isPlainObject from "../helper";
+import isPlainObject from "../helper.js";
 
 export function transformObject(object, transformer) {
+  
   if (!isPlainObject(object)) {
     throw new TypeError("Value must be a plain object");
   }
@@ -9,13 +10,28 @@ export function transformObject(object, transformer) {
     throw new TypeError("Transformer must be a function");
   }
 
-  const result = {};
+  function transformValue(value, key) {
+    if (Array.isArray(value)) {
+      return value.map((item, index) =>
+        transformValue(item, index)
+      );
+    }
 
-  for (const key of Object.keys(object)) {
-    const value = object[key];
+    if (isPlainObject(value)) {
+      const result = {};
 
-    result[key] = transformer(value, key);
+      for (const currentKey of Object.keys(value)) {
+        result[currentKey] = transformValue(
+          value[currentKey],
+          currentKey
+        );
+      }
+
+      return result;
+    }
+
+    return transformer(value, key);
   }
 
-  return result;
+  return transformValue(object);
 }
