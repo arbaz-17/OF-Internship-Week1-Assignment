@@ -1,15 +1,16 @@
-# `Chunk Utility Function`
+# Chunk Utility
 
-Split a string or an array into smaller arrays of a specified maximum size.
+## Name
+
+`chunk`
 
 ## Purpose
 
-The `chunk` function divides an input collection into sequential chunks.
+The `chunk` utility divides an array or string into smaller groups of a specified size.
 
-- Each chunk contains at most `size` items.
-- The original item order is preserved.
-- The final chunk may contain fewer items when the input length is not evenly divisible by `size`.
-- The input value is not modified.
+It processes the input from left to right and adds each value to the current chunk. When the chunk reaches the requested size, it is added to the result. If any values remain at the end, they are returned as a smaller final chunk.
+
+The function does not modify the original input.
 
 ## Function Signature
 
@@ -17,77 +18,46 @@ The `chunk` function divides an input collection into sequential chunks.
 chunk(values, size)
 ```
 
-## Input
+## Parameters
 
 ### `values`
 
-A string or an array to divide into chunks.
+The data to divide into chunks.
 
-```js
-chunk([1, 2, 3, 4], 2);
-chunk("hello", 2);
-```
+Supported input types:
 
-When a string is provided, it is iterated character by character. Therefore, the returned chunks are arrays of characters rather than strings.
+- Array
+- String
+
+Passing any other type throws a `TypeError`.
 
 ### `size`
 
-A positive integer specifying the maximum number of items in each chunk.
+A positive integer that defines the maximum number of items in each chunk.
 
-Valid examples:
-
-```js
-1
-2
-5
-```
-
-Invalid examples:
-
-```js
-0
--1
-1.5
-"2"
-```
+The value must be greater than `0`. Invalid values such as `0`, negative numbers, decimals, strings, `NaN`, and `Infinity` throw a `RangeError`.
 
 ## Output
 
-Returns an array containing the generated chunks.
+Returns a new array containing the generated chunks.
 
-### Array input
+For an array input, each chunk is an array of values.
 
 ```js
 chunk([1, 2, 3, 4, 5], 2);
+
+// [[1, 2], [3, 4], [5]]
 ```
 
-Output:
-
-```js
-[
-  [1, 2],
-  [3, 4],
-  [5]
-]
-```
-
-### String input
+For a string input, each chunk is returned as an array of characters.
 
 ```js
 chunk("hello", 2);
+
+// [["h", "e"], ["l", "l"], ["o"]]
 ```
 
-Output:
-
-```js
-[
-  ["h", "e"],
-  ["l", "l"],
-  ["o"]
-]
-```
-
-### Empty input
+If the input is empty, the function returns an empty array.
 
 ```js
 chunk([], 3);
@@ -97,65 +67,46 @@ chunk("", 3);
 // []
 ```
 
-## Algorithm
+## Example File
 
-The function works as follows:
+A runnable example is available at:
 
-1. Validate that `values` is either a string or an array.
-2. Validate that `size` is a positive integer.
-3. Create an empty result array and an empty current chunk.
-4. Iterate over each item in `values`.
-5. Add the item to the current chunk.
-6. When the current chunk reaches `size`, add it to the result and start a new chunk.
-7. After iteration, add the final partially filled chunk when it is not empty.
-8. Return the result.
+```text
+examples/chunk.js
+```
 
-## Validations
+## Error Handling
 
-The function performs two validations.
-
-### Invalid `values`
-
-A `TypeError` is thrown when `values` is neither a string nor an array.
+The function throws a `TypeError` when the input is not an array or string.
 
 ```js
-chunk(123, 2);
-// TypeError: Input must be a string or an array.
-
-chunk({ a: 1 }, 2);
+chunk({ value: 1 }, 2);
 // TypeError: Input must be a string or an array.
 ```
 
-### Invalid `size`
-
-A `RangeError` is thrown when `size` is not an integer greater than `0`.
+The function throws a `RangeError` when the chunk size is not a positive integer.
 
 ```js
 chunk([1, 2, 3], 0);
 // RangeError: Size must be an integer greater than 0
-
-chunk([1, 2, 3], 1.5);
-// RangeError: Size must be an integer greater than 0
 ```
 
-## Running the Examples
+## Implementation Notes
 
-Example cases are available in:
+The utility uses a loop to build each chunk manually instead of relying on methods such as `slice()` or `reduce()`.
 
-```text
-/examples/chunk.js
-```
+A new result array and new chunk arrays are created, so the original array is not mutated. However, objects or arrays stored inside the input are copied by reference rather than deeply cloned.
 
-Run the file from the project root:
+## Limitations
 
-```bash
-node examples/chunk.js
-```
+- Only arrays and strings are supported.
+- Values stored inside an input array are not cloned.
 
-The project must be configured to support ES modules because `chunk` is exported with the `export` keyword. One common configuration is to include the following setting in `package.json`:
+## Complexity
 
-```json
-{
-  "type": "module"
-}
-```
+Let `n` be the number of values or characters in the input.
+
+- Time complexity: `O(n)`
+- Space complexity: `O(n)`
+
+Each input item is visited once and stored once in the returned chunks.
