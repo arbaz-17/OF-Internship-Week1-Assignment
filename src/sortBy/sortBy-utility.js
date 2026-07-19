@@ -19,16 +19,20 @@ export function sortBy(values, selector, direction = "asc") {
     const valueA =
       typeof selector === "function"
         ? selector(itemA)
-        : itemA[selector];
+        : itemA == null
+          ? undefined
+          : itemA[selector];
 
     const valueB =
       typeof selector === "function"
         ? selector(itemB)
-        : itemB[selector];
+        : itemB == null
+          ? undefined
+          : itemB[selector];
 
     if (valueA == null && valueB == null) return 0;
-    if (valueA == null) return 1; 
-    if (valueB == null) return -1; 
+    if (valueA == null) return 1;
+    if (valueB == null) return -1;
 
     let comparison = 0;
 
@@ -45,8 +49,6 @@ export function sortBy(values, selector, direction = "asc") {
 
   return result;
 }
-
-
 
 
 
