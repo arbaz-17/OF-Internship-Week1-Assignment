@@ -1,16 +1,16 @@
-# `Flatten Utility Function`
+# Flatten Utility
 
-Flatten nested arrays to a specified depth.
+## Name
+
+`flatten`
 
 ## Purpose
 
-The `flatten` function creates a new array by replacing nested arrays with their elements up to a specified depth.
+The `flatten` utility reduces the nesting level of an array by moving nested values into a new result array.
 
-- The default flattening depth is `1`.
-- A depth of `0` keeps nested arrays unchanged.
-- A depth of `Infinity` flattens all nested arrays.
-- The original array is not modified.
-- The order of values is preserved.
+By default, it flattens one level. A custom depth can be provided to control how many nested levels are removed. Passing `Infinity` completely flattens all supported nested arrays.
+
+The original array is not modified.
 
 ## Function Signature
 
@@ -18,40 +18,27 @@ The `flatten` function creates a new array by replacing nested arrays with their
 flatten(values, depth = 1)
 ```
 
-## Input
+## Parameters
 
 ### `values`
 
-The array to flatten. It may contain values, nested arrays, or both.
+The array to flatten.
 
-```js
-flatten([1, [2, 3], 4]);
-flatten([1, [2, [3, 4]]], 2);
-```
+Only arrays are accepted. Passing any other value throws a `TypeError`.
 
 ### `depth`
 
-An optional non-negative integer that specifies how many nested array levels should be flattened.
+A non-negative integer that determines how many nesting levels should be removed.
 
 The default value is `1`.
 
-Valid depth values include:
+Supported depth values include:
 
-```js
-0
-1
-2
-Infinity
-```
+- `0` — returns a shallow copy without flattening nested arrays
+- Positive integers — flatten up to the specified number of levels
+- `Infinity` — flatten all nested levels
 
-Invalid depth values include:
-
-```js
--1
-1.5
-"2"
-NaN
-```
+Negative numbers, decimals, strings, `NaN`, and `-Infinity` throw a `RangeError`.
 
 ## Output
 
@@ -59,69 +46,67 @@ Returns a new array containing the flattened values.
 
 ### Default depth
 
-When `depth` is omitted, one nested level is flattened.
-
 ```js
 flatten([1, [2, 3], [4, [5]]]);
-```
 
-Output:
-
-```js
-[1, 2, 3, 4, [5]]
+// [1, 2, 3, 4, [5]]
 ```
 
 ### Custom depth
 
 ```js
 flatten([1, [2, [3, [4]]]], 2);
+
+// [1, 2, 3, [4]]
 ```
 
-Output:
+### Complete flattening
 
 ```js
-[1, 2, 3, [4]]
+flatten([1, [2, [3, [4]]]], Infinity);
+
+// [1, 2, 3, 4]
 ```
 
-### Depth of zero
 
-A depth of `0` does not flatten nested arrays. The function still returns a new top-level array.
+## Example File
+
+A runnable example is available at:
+
+```text
+examples/flatten.js
+```
+
+
+## Error Handling
+
+The function throws a `TypeError` when `values` is not an array.
 
 ```js
-flatten([1, [2, 3]], 0);
+flatten("hello");
+
+// TypeError: Values must be an array
 ```
 
-Output:
+The function throws a `RangeError` when `depth` is not a non-negative integer or `Infinity`.
 
 ```js
-[1, [2, 3]]
+flatten([1, [2]], -1);
+
+// RangeError: Depth must be a non-negative integer or Infinity
 ```
 
-### Infinite depth
+## Implementation Notes
 
-Use `Infinity` to flatten every nested array level.
+The utility uses a recursive helper function named `flattenInto`.
 
-```js
-flatten([1, [2, [3, [4, [5]]]]], Infinity);
-```
+For each item:
 
-Output:
+1. If the item is an array and the remaining depth is greater than `0`, the helper processes that array recursively.
+2. Otherwise, the item is added directly to the result.
+3. The depth is reduced only when a nested array is entered.
 
-```js
-[1, 2, 3, 4, 5]
-```
-
-### Empty array
-
-```js
-flatten([]);
-```
-
-Output:
-
-```js
-[]
-```
+The result array is created separately, so the original array is not mutated.
 
 ## Algorithm
 
@@ -139,54 +124,17 @@ The function uses a recursive helper named `flattenInto`.
 6. Otherwise, add the item directly to the result.
 7. Return the completed result array.
 
-## Validations
+## Limitations
 
-### Invalid `values`
+- Only arrays are accepted as the top-level input.
+- The function does not clone objects or other reference values inside the array.
 
-A `TypeError` is thrown when `values` is not an array.
+## Complexity
 
-```js
-flatten("hello");
-// TypeError: Values must be an array
+Let `n` be the total number of values visited within the requested depth, and let `d` be the maximum recursion depth reached.
 
-flatten({ value: 1 });
-// TypeError: Values must be an array
-```
+- Time complexity: `O(n)`
+- Result space complexity: `O(n)`
+- Call-stack space: `O(d)`
 
-### Invalid `depth`
-
-A `RangeError` is thrown when `depth` is not a non-negative integer or `Infinity`.
-
-```js
-flatten([1, [2]], -1);
-// RangeError: Depth must be a non-negative integer or Infinity
-
-flatten([1, [2]], 1.5);
-// RangeError: Depth must be a non-negative integer or Infinity
-
-flatten([1, [2]], "2");
-// RangeError: Depth must be a non-negative integer or Infinity
-```
-
-## Running the Examples
-
-Example cases are available in:
-
-```text
-/examples/flatten.js
-```
-
-Run the example file from the project root:
-
-```bash
-node examples/flatten.js
-```
-
-The project must support ES modules because `flatten` is exported using the `export` keyword. One common setup is to include the following field in `package.json`:
-
-```json
-{
-  "type": "module"
-}
-```
-
+Each visited value is processed once and added to the result at most once.
