@@ -1,102 +1,75 @@
-# OF Internship — Week 1 Assignment
+# JavaScript Utility Library
 
 A collection of Week 1 assignment submissions and foundational JavaScript tasks completed for the **OptimusFox Internship Program**.
 
-This repository showcases a custom **JavaScript Utility Library** built without Lodash. Each utility is organized in its own folder and includes a dedicated `README.md` with implementation details and examples.
+This repository contains a custom JavaScript utility library built without Lodash. The utilities focus on core JavaScript concepts such as arrays, objects, functions, recursion, comparison, validation, and modern ES module syntax.
 
-## Week 1 — JavaScript Core Fundamentals
+Each utility is organized in its own folder and includes a dedicated `README.md` containing its purpose, inputs, output, algorithm, examples, limitations, and complexity.
 
-### Training Topics
+## Utilities
 
-- Variables and data types
-- Primitive vs. reference values
-- Type coercion and equality
-- Functions
-- Arrays and objects
-- Array methods
-- Destructuring
-- Spread and rest operators
-- Template literals
-- ES modules
+| Utility | Purpose |
+|---|---|
+| `chunk` | Divides an array or string into smaller groups of a specified size. |
+| `flatten` | Reduces the nesting level of an array using a configurable depth. |
+| `sortBy` | Returns a new array sorted by a property or selector function. |
+| `groupBy` | Groups array items by a property or selector function. |
+| `deepClone` | Recursively clones primitives, arrays, and plain objects. |
+| `objectComparison` | Deeply compares plain objects containing nested arrays and objects. |
+| `transformObject` | Recursively applies a transformer function to object leaf values. |
+| `unique` | Removes duplicates using normal JavaScript value and reference equality. |
+| `uniqueDeep` | Removes duplicates by comparing supported arrays and plain objects by content. |
 
-### Learning Outcomes
+## Project Structure
 
-By completing this assignment, I practiced how to:
+```text
+.
+├── examples/
+│   ├── chunk.js
+│   ├── flatten.js
+│   ├── sortBy.js
+│   └── ...
+├── src/
+│   ├── chunk/
+│   │   ├── chunk.js
+│   │   └── README.md
+│   ├── flatten/
+│   │   ├── flatten.js
+│   │   └── README.md
+│   └── ...
+├── helper.js
+├── index.js
+└── README.md
+```
 
-- Explain core JavaScript behavior
-- Manipulate arrays, objects, and other data structures
-- Write reusable utility functions
-- Use modern ES syntax
-- Organize code into modules
-- Document implementations and usage examples
 
-## Weekly Assignment
+## Examples
 
-Build a JavaScript utility library containing the following functions:
+The `examples` folder contains runnable files for testing each utility.
 
-| Utility | Description |
-| --- | --- |
-| `groupBy` | Groups collection items using a property or callback result. |
-| `flatten` | Converts nested arrays into a flatter array structure. |
-| `unique` | Removes duplicate primitive values or objects from an array. |
-| `sortBy` | Sorts a collection using a selected property or callback. |
-| `chunk` | Splits an array into smaller arrays of a specified size. |
-| `deepClone` | Creates an independent deep copy of a value. |
-| Object comparison | Compares objects by their values and structure. |
-| Object transformation | Transforms object keys, values, or structure. |
+For example:
+
+```bash
+node examples/chunk.js
+```
+
+Each example imports the relevant utility, provides sample input, and logs the result.
 
 ## Getting Started
 
-### 1. Clone the repository
+1. Clone the repository.
+2. Open the project folder.
+3. Make sure Node.js is installed.
+4. Run any file from the `examples` folder.
 
 ```bash
 git clone https://github.com/arbaz-17/OF-Internship-Week1-Assignment.git
 cd JS-UTILITY-LIBRARY
+node examples/chunk.js
 ```
 
-### 2. Import a utility
+## Notes
 
-Utilities can be imported from the main entry file:
-
-```js
-import {
-  chunk,
-  deepClone,
-  flatten,
-  groupBy,
-  sortBy,
-} from "./src/index.js";
-```
-
-You can also import a utility directly from its folder:
-
-```js
-import { chunk } from "./src/chunk/chunk-utility.js";
-```
-
-## Utility Documentation
-
-Each utility folder contains its own `README.md`, covering details such as:
-
-- Purpose and behavior
-- Function parameters
-- Return value
-- Usage examples
-- Edge cases
-- Implementation notes
-
-Refer to the relevant folder for utility-specific documentation.
-
-## Key Concepts Practiced
-
-This project applies JavaScript fundamentals including:
-
-- Primitive and reference value handling
-- Recursion
-- Higher-order functions
-- Callback functions
-- Array and object iteration
-- Shallow and deep comparison
-- Immutable data handling
-- Modular code organization
-- Reusable function design
+- Lodash is not used.
+- The utilities are implemented for learning purposes with reduced reliance on high-level built-in methods.
+- Detailed behavior and known limitations are documented inside each utility folder.
