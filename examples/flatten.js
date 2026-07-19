@@ -1,6 +1,18 @@
 import { flatten } from "../src/flatten/flatten-utility.js";
 
 
+function logExpectedError(label, callback) {
+  try {
+    callback();
+  } catch (error) {
+    console.error(
+      `Caught expected error (${label}):`,
+      error.message
+    );
+  }
+}
+
+
 console.log("--- Basic Array Examples ---");
 
 console.log(

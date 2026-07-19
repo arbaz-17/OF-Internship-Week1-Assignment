@@ -1,4 +1,4 @@
-import { unique } from "../src/unique/unique-utility";
+import { unique } from "../src/unique/unique-utility.js";
 
 function logExpectedError(label, callback) {
   try {

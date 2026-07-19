@@ -1,4 +1,4 @@
-import { uniqueDeep } from "../src/uniqueDeep/unique-deep-utility.js";
+import { uniqueDeep } from "../src/unique/uniqueDeep-utility.js";
 
 function logExpectedError(label, callback) {
   try {
