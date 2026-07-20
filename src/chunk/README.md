@@ -109,4 +109,4 @@ Let `n` be the number of values or characters in the input.
 - Time complexity: `O(n)`
 - Space complexity: `O(n)`
 
-Each input item is visited once and stored once in the returned chunks.
+Each input item is visited once and stored once in the returned chunked array.
